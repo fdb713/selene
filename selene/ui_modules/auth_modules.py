@@ -20,6 +20,12 @@ class TwitterLoginModule(tornado.web.UIModule):
         return self.render_string('modules/twitterlogin.html')
 
 
+class FacebookLoginModule(tornado.web.UIModule):
+
+    def render(self):
+        return self.render_string('modules/facebooklogin.html')
+
+
 class RegisterModule(tornado.web.UIModule):
 
     def render(self):

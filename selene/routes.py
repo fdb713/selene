@@ -9,6 +9,7 @@ urls = [
     (r"/login/?", handlers.LoginHandler),
     (r"/login/google/?", handlers.LoginGoogleHandler),
     (r"/login/twitter/?", handlers.LoginTwitterHandler),
+    (r"/login/facebook/?", handlers.LoginFacebookHandler),
     (r'/confirm-account/(.*)', handlers.ConfirmAccountHandler),
     (r'/new-password', handlers.RequestNewPasswordHandler),
     (r'/reset-password/(.*)', handlers.ResetPasswordHandler),

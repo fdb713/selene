@@ -130,6 +130,29 @@ class LoginTwitterHandler(AuthBaseHandler, tornado.auth.TwitterMixin):
         self.redirect(self.next_)
 
 
+class LoginFacebookHandler(AuthBaseHandler, tornado.auth.FacebookGraphMixin):
+
+    @tornado.web.asynchronous
+    def get(self):
+        if self.get_argument("code", False):
+            self.next_ = self.get_argument('next', '/')
+            self.get_authenticated_user(
+                redirect_uri=options.base_url + '/login/facebook/',
+                client_id=self.settings["facebook_app_id"],
+                client_secret=self.settings["facebook_app_secret"],
+                code=self.get_argument("code"),
+                callback=self.async_callback(self._on_login))
+            return
+        self.authorize_redirect(redirect_uri=options.base_url +
+                                             '/login/facebook/',
+                                client_id=self.settings["facebook_app_id"],
+                                extra_params={"scope": "offline_access"})
+
+    def _on_login(self, data):
+        self.write(data)
+        self.finish()
+
+
 class RequestNewPasswordHandler(AuthBaseHandler):
 
     def get(self):

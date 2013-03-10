@@ -25,6 +25,9 @@ class Selene(tornado.web.Application):
         if opts.twitter_consumer_key and opts.twitter_consumer_secret:
             settings['twitter_consumer_key'] = opts.twitter_consumer_key
             settings['twitter_consumer_secret'] = opts.twitter_consumer_secret
+        if opts.facebook_app_id and opts.facebook_app_secret:
+            settings['facebook_app_id'] = opts.facebook_app_id
+            settings['facebook_app_secret'] = opts.facebook_app_secret
         tornado.web.Application.__init__(self, routes.urls +
             [(r"/(favicon\.ico)", tornado.web.StaticFileHandler,
             {'path': settings['static_path']})], **settings)

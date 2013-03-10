@@ -65,6 +65,12 @@ def setup_options(path):
     tornado.options.define('twitter_consumer_secret', default=None, type=str,
         help='Twitter consumer secret for authentication')
 
+    #Facebook auth
+    tornado.options.define('facebook_app_id', default=None, type=str,
+        help='Facebook App ID for authentication')
+    tornado.options.define('facebook_app_secret', default=None, type=str,
+        help='Facebook App secret for authentication')
+
     #Twitter
     tornado.options.define('twitter_button_enabled', default=True, type=bool,
         help='Twitter share button enabled')
