@@ -141,16 +141,33 @@ class LoginFacebookHandler(AuthBaseHandler, tornado.auth.FacebookGraphMixin):
                 client_id=self.settings["facebook_app_id"],
                 client_secret=self.settings["facebook_app_secret"],
                 code=self.get_argument("code"),
+                params={"scope": "email"},
                 callback=self.async_callback(self._on_login))
             return
-        self.authorize_redirect(redirect_uri=options.base_url +
-                                             '/login/facebook/',
-                                client_id=self.settings["facebook_app_id"],
-                                extra_params={"scope": "offline_access"})
+        self.authorize_redirect(
+            redirect_uri=options.base_url + '/login/facebook/',
+            client_id=self.settings["facebook_app_id"],
+            extra_params={"scope": "email"})
 
     def _on_login(self, data):
+        if not data:
+            raise tornado.web.HTTPError(500)
         self.write(data)
         self.finish()
+        return
+        user = {
+            'name': data['name'],
+            'email': data['email'],
+            'enabled': True,
+            'join': datetime.datetime.now(),
+            'locale': data['locale'],
+            'accounts': ['google'],
+            'google_claimed_id': data['claimed_id']
+        }
+        self.db.users.update({'email': data['email']}, {'$set': user},
+            upsert=True)
+        self.set_secure_cookie("current_user", user["email"])
+        self.redirect(self.next_)
 
 
 class RequestNewPasswordHandler(AuthBaseHandler):
